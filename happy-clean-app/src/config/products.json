@@ -1,0 +1,44 @@
+{
+  "$schema": "./products.schema.json",
+  "products": [
+    {
+      "id": "lemon",
+      "name": "Dishwashing Liquid",
+      "scent": "Zesty Lemon",
+      "category": "Dishwashing",
+      "size": "3.8 L",
+      "unit": "gallon",
+      "price": 140,
+      "image": "images/lemon.webp",
+      "color": "#f5cf2a",
+      "features": ["Cuts through grease", "Eliminates germs, kills 99.9%", "Fresh lemon scent", "1-gallon value pack"],
+      "inStock": true
+    },
+    {
+      "id": "calamansi",
+      "name": "Dishwashing Liquid",
+      "scent": "Calamansi Burst",
+      "category": "Dishwashing",
+      "size": "3.8 L",
+      "unit": "gallon",
+      "price": 140,
+      "image": "images/calamansi.webp",
+      "color": "#3f9b57",
+      "features": ["Cuts through grease", "With anti-bacterial, kills 99.9%", "Zesty calamansi scent", "1-gallon value pack"],
+      "inStock": true
+    },
+    {
+      "id": "apple",
+      "name": "Liquid Handsoap",
+      "scent": "Fresh Green Apple",
+      "category": "Handsoap",
+      "size": "3.8 L",
+      "unit": "gallon",
+      "price": 140,
+      "image": "images/apple.webp",
+      "color": "#8cc63f",
+      "features": ["Kills 99.9% of germs", "Gentle on hands", "Fresh green apple scent", "1-gallon saver pack"],
+      "inStock": true
+    }
+  ]
+}

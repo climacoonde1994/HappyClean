@@ -1,0 +1,220 @@
+<section class="hero">
+  <span class="bubble b1" aria-hidden="true"></span>
+  <span class="bubble b2" aria-hidden="true"></span>
+  <span class="bubble b3" aria-hidden="true"></span>
+  <div class="wrap hero-grid">
+    <div>
+      <span class="pill"><i></i>Dishwashing liquid · Liquid handsoap</span>
+      <h1><span class="y">Happiness</span><br />in every <span class="b">wash.</span></h1>
+      <p class="lede">
+        Grease-cutting dishwashing liquid and germ-fighting handsoap in big 3.8 L gallons. Fair prices for every
+        scent, made for homes, carinderias, offices and resellers.
+      </p>
+      <div class="ctas">
+        <a class="btn btn-sun" routerLink="/order">Order now</a>
+        <a class="btn btn-line" routerLink="/" fragment="products">See our products</a>
+      </div>
+      <div class="stats">
+        <div><span>Products</span><strong class="num">{{ products.length }}</strong></div>
+        <div><span>Categories</span><strong class="num">{{ categories }}</strong></div>
+        <div><span>{{ samePrice ? 'One price' : 'Starting at' }}</span><strong class="num">₱{{ minPrice | number }}</strong></div>
+      </div>
+    </div>
+    <aside class="price-card" aria-label="Price list">
+      <header><h2>Price list</h2><span>{{ samePrice ? 'Same price, every scent' : 'Prices per item' }}</span></header>
+      <ul>
+        @for (p of products; track p.id) {
+          <li>
+            <span class="thumb tint" [style.--tint]="p.color"><img [src]="p.image" alt="" /></span>
+            <span><strong>{{ p.name }}</strong><small>{{ p.scent }} · {{ p.size }}{{ p.inStock ? '' : ' · Out of stock' }}</small></span>
+            <span class="amt num">₱{{ p.price | number }}<small>/{{ p.unit }}</small></span>
+          </li>
+        }
+      </ul>
+      <footer><a routerLink="/order">Start your order →</a></footer>
+    </aside>
+  </div>
+  <svg class="suds" viewBox="0 0 1440 36" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0 36V20c40-14 80-14 120 0s80 14 120 0 80-14 120 0 80 14 120 0 80-14 120 0 80 14 120 0 80-14 120 0 80 14 120 0 80-14 120 0 80 14 120 0 80-14 120 0 80 14 120 0v16z" /></svg>
+</section>
+
+<section class="section" id="products">
+  <div class="wrap">
+    <div class="section-head">
+      <div><span class="eyebrow">Our products</span><h2>Pick your scent</h2></div>
+      <p>Big saver sizes at fair prices. Add what you need, then check out in a minute.</p>
+    </div>
+    <div class="shelf">
+      @for (p of products; track p.id) {
+        @let r = rating(p.id);
+        @let q = cart.qtyOf(p.id);
+        <article class="product" [class.out]="!p.inStock">
+          <div class="stage tint" [style.--tint]="p.color">
+            <span class="tag">{{ p.category }}</span><span class="size">{{ p.size }}</span>
+            <img [src]="p.image" [alt]="'Happy Clean ' + p.name + ', ' + p.scent + ', ' + p.size" width="200" height="270" />
+          </div>
+          <div class="body">
+            <div>
+              <h3>{{ p.name }}</h3>
+              <span class="scent"><i class="dot" [style.background]="p.color"></i>{{ p.scent }}</span>
+              <a class="rating" routerLink="/" fragment="reviews">
+                <app-stars [value]="r.average" />
+                @if (r.count) {
+                  <b>{{ r.average | number: '1.1-1' }}</b> ({{ r.count }} review{{ r.count > 1 ? 's' : '' }})
+                } @else {
+                  No reviews yet
+                }
+              </a>
+            </div>
+            <ul class="feat">
+              @for (f of p.features; track f) {
+                <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>{{ f }}</li>
+              }
+            </ul>
+            <div class="buy">
+              <span class="price num">₱{{ p.price | number }} <small>/ {{ p.unit }}</small></span>
+              @if (!p.inStock) {
+                <span class="oos">Out of stock</span>
+              } @else if (q) {
+                <app-qty-stepper [value]="q" [label]="p.scent" (changed)="cart.setQty(p.id, $event)" />
+              } @else {
+                <button class="btn btn-navy" type="button" (click)="add(p.id)">Add to order</button>
+              }
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+    @if (cart.totalQty()) {
+      <div class="shelf-cta">
+        <span><b class="num">{{ cart.totalQty() }}</b> item{{ cart.totalQty() > 1 ? 's' : '' }} · <b class="num">₱{{ cart.subtotal() | number }}</b></span>
+        <a class="btn btn-sun" routerLink="/order">Review order →</a>
+      </div>
+    }
+  </div>
+</section>
+
+<section class="section why" id="why">
+  <div class="wrap">
+    <div class="section-head">
+      <div><span class="eyebrow">Why Happy Clean</span><h2>Clean that pays for itself</h2></div>
+    </div>
+    <div class="why-grid">
+      <div class="why-item">
+        <span class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z" /><path d="M4 4l16 16" /></svg></span>
+        <h3>Cuts through grease</h3>
+        <p>Lifts oil from pans, plates and kawali so dishes rinse clean in one pass.</p>
+        <span class="which">Dishwashing liquid</span>
+      </div>
+      <div class="why-item">
+        <span class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z" /><path d="M9 12l2 2 4-4" /></svg></span>
+        <h3>Kills 99.9% of germs</h3>
+        <p>Anti-bacterial formula for dishes and hands, for a cleaner kitchen and table.</p>
+        <span class="which">All products</span>
+      </div>
+      <div class="why-item">
+        <span class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6v3l2 3v10a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V9l2-3z" /><path d="M7 13h10" /></svg></span>
+        <h3>Saver sizes</h3>
+        <p>Big sizes from ₱{{ minPrice | number }}. Refill your small bottles and dispensers and spend less per wash.</p>
+        <span class="which">All products</span>
+      </div>
+      <div class="why-item">
+        <span class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" /></svg></span>
+        <h3>Gentle on hands</h3>
+        <p>A mild, fresh green apple handsoap for everyday washing at home and work.</p>
+        <span class="which">Liquid handsoap</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="reviews">
+  <div class="wrap">
+    <div class="section-head">
+      <div><span class="eyebrow">Reviews</span><h2>What customers say</h2></div>
+      <p>Tried Happy Clean? Rate it and tell us what you think. We add customer reviews to this page.</p>
+    </div>
+    <div class="rev-layout">
+      <div>
+        <div class="rev-summary">
+          @for (p of products; track p.id) {
+            @let r = rating(p.id);
+            <div class="rev-sum">
+              <strong>{{ p.scent }}</strong>
+              <span class="avg num">{{ r.count ? (r.average | number: '1.1-1') : '–' }}</span>
+              <app-stars [value]="r.average" />
+              <small>{{ r.count ? r.count + ' review' + (r.count > 1 ? 's' : '') : 'No reviews yet' }}</small>
+            </div>
+          }
+        </div>
+        <div class="rev-list">
+          @for (r of reviews; track $index) {
+            <article class="review">
+              <header>
+                <span><span class="who">{{ r.name }}</span>@if (r.city) {<span class="meta"> · {{ r.city }}</span>}</span>
+                <app-stars [value]="r.stars" />
+              </header>
+              <span class="meta">{{ productName(r.product) }}@if (r.date) { · {{ r.date }}}</span>
+              <p>{{ r.text }}</p>
+            </article>
+          } @empty {
+            <div class="rev-empty"><strong>Be the first to review Happy Clean</strong>Use the form to rate a product and send us your review.</div>
+          }
+        </div>
+      </div>
+      <div class="panel">
+        <header><h3>Write a review</h3></header>
+        <form class="form" (submit)="$event.preventDefault()">
+          <div class="field">
+            <label for="r-product">Product</label>
+            <select id="r-product" [value]="revProduct()" (change)="revProduct.set($any($event.target).value)">
+              @for (p of products; track p.id) {
+                <option [value]="p.id">{{ p.name }} – {{ p.scent }}</option>
+              }
+            </select>
+          </div>
+          <div class="field">
+            <span class="label" id="r-stars-label">Your rating</span>
+            <div class="star-pick" role="radiogroup" aria-labelledby="r-stars-label">
+              @for (i of [1, 2, 3, 4, 5]; track i) {
+                <button type="button" role="radio" [attr.aria-checked]="i === revStars()" [attr.aria-label]="i + ' star' + (i > 1 ? 's' : '')" [class.on]="i <= revStars()" (click)="revStars.set(i)">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z" /></svg>
+                </button>
+              }
+            </div>
+          </div>
+          <div class="row2">
+            <div class="field"><label for="r-name">Name</label><input id="r-name" placeholder="Juan D." [value]="revName()" (input)="revName.set($any($event.target).value)" /></div>
+            <div class="field"><label for="r-city">City (optional)</label><input id="r-city" placeholder="Quezon City" [value]="revCity()" (input)="revCity.set($any($event.target).value)" /></div>
+          </div>
+          <div class="field"><label for="r-text">Your review</label><textarea id="r-text" placeholder="How did it work on your dishes or hands?" [value]="revText()" (input)="revText.set($any($event.target).value)"></textarea></div>
+        </form>
+        <div class="send">
+          <button class="btn btn-sun" type="button" (click)="copyReview()">Copy review</button>
+          <a class="btn btn-navy" [href]="revSms()">Text us</a>
+          <a class="btn btn-line" [href]="revMail()">Email us</a>
+        </div>
+        <p class="hint">Send your review by text, email or on our Facebook page <b>{{ store.facebookName }}</b>. We'll post it here.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="contact">
+  <div class="wrap">
+    <div class="contact">
+      <div>
+        <span class="eyebrow sun">Get in touch</span>
+        <h2>Order now, <span>stay happy clean.</span></h2>
+        <p>Order online, message our Facebook page, or call us for bulk pricing and reseller inquiries.</p>
+        <a class="btn btn-sun" routerLink="/order" style="margin-top: 20px">Start an order</a>
+      </div>
+      <dl>
+        <div><dt>Mobile</dt><dd><a class="num" [href]="'tel:' + store.mobile">{{ store.mobileDisplay }}</a><button class="copy" type="button" (click)="copy(store.mobile)">Copy</button></dd></div>
+        <div><dt>Phone</dt><dd><a class="num" [href]="'tel:' + store.phone">{{ store.phoneDisplay }}</a><button class="copy" type="button" (click)="copy(store.phone)">Copy</button></dd></div>
+        <div><dt>Email</dt><dd><a [href]="'mailto:' + store.email">{{ store.email }}</a><button class="copy" type="button" (click)="copy(store.email)">Copy</button></dd></div>
+        <div><dt>Facebook</dt><dd>@if (store.facebookUrl) {<a [href]="store.facebookUrl" target="_blank" rel="noopener">{{ store.facebookName }}</a>} @else {{{ store.facebookName }}}</dd></div>
+      </dl>
+      <div class="qr"><img src="images/qr.png" alt="QR code for the Happy Clean Facebook page" width="160" height="160" /><span>Scan to follow us on Facebook</span></div>
+    </div>
+  </div>
+</section>

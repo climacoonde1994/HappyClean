@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Happy Clean products",
+  "type": "object",
+  "required": ["products"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "products": {
+      "type": "array",
+      "description": "Products in the order they appear on the site.",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "scent", "category", "size", "unit", "price", "image", "color", "features"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]+$", "description": "Short unique code: lowercase letters, numbers and dashes, e.g. lavender-handsoap. Reviews use this to point to the product. Don't change it once customers have ordered or reviewed it." },
+          "name": { "type": "string", "minLength": 1, "description": "Product name, e.g. Liquid Handsoap" },
+          "scent": { "type": "string", "minLength": 1, "description": "Scent or variant, e.g. Lavender" },
+          "category": { "type": "string", "minLength": 1, "description": "Small label on the product photo, e.g. Dishwashing, Handsoap, Fabric Conditioner" },
+          "size": { "type": "string", "minLength": 1, "description": "Size shown on the badge, e.g. 3.8 L or 1 L" },
+          "unit": { "type": "string", "minLength": 1, "description": "What the price is per, e.g. gallon, bottle, pack" },
+          "price": { "type": "number", "exclusiveMinimum": 0, "description": "Price in pesos, numbers only, e.g. 140" },
+          "image": { "type": "string", "pattern": "^images/.+\\.(webp|png|jpg|jpeg)$", "description": "Photo file in public/images, e.g. images/lavender.webp. A bottle on a transparent background looks best." },
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$", "description": "Product color as a hex code, e.g. #9b7fd1. Used for the scent dot and the photo background." },
+          "features": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1, "maxItems": 6, "description": "Short selling points with check marks, 1 to 6" },
+          "inStock": { "type": "boolean", "description": "Optional. Set to false to show 'Out of stock' and stop orders for this product." }
+        }
+      }
+    }
+  }
+}

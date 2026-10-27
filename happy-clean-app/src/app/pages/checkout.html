@@ -1,0 +1,145 @@
+<section class="page-head">
+  <div class="wrap">
+    <app-order-steps [current]="2" />
+    <h1>Details & delivery</h1>
+    <p>Tell us where to send your order. We'll text you to confirm the total, delivery fee and schedule before anything is charged.</p>
+  </div>
+</section>
+
+<div class="wrap layout">
+  @if (!cart.lines().length) {
+    <div class="panel empty">
+      <h2>Your order is empty</h2>
+      <p>Add products first, then come back here to check out.</p>
+      <a class="btn btn-sun" routerLink="/order">Choose products</a>
+    </div>
+  } @else {
+    <form class="panel form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <fieldset>
+        <legend>Contact</legend>
+        <div class="row2">
+          <div class="field" [class.invalid]="invalid('name')">
+            <label for="c-name">Full name</label>
+            <input id="c-name" formControlName="name" autocomplete="name" placeholder="Juan Dela Cruz" />
+            @if (invalid('name')) { <span class="err">Enter your name.</span> }
+          </div>
+          <div class="field" [class.invalid]="invalid('mobile')">
+            <label for="c-mobile">Mobile number</label>
+            <input id="c-mobile" formControlName="mobile" inputmode="tel" autocomplete="tel" placeholder="0917 123 4567" />
+            @if (invalid('mobile')) { <span class="err">Enter an 11-digit mobile number, like 0917 123 4567.</span> }
+          </div>
+        </div>
+        <div class="field" [class.invalid]="invalid('email')">
+          <label for="c-email">Email (optional)</label>
+          <input id="c-email" type="email" formControlName="email" autocomplete="email" placeholder="you@example.com" />
+          @if (invalid('email')) { <span class="err">Check the email address.</span> }
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Delivery or pick-up</legend>
+        <div class="seg" role="radiogroup" aria-label="Delivery or pick-up">
+          <button type="button" role="radio" [attr.aria-checked]="form.controls.fulfillment.value === 'delivery'" (click)="setFulfillment('delivery')">
+            <strong>Delivery</strong><span>We text you the delivery fee</span>
+          </button>
+          <button type="button" role="radio" [attr.aria-checked]="form.controls.fulfillment.value === 'pickup'" (click)="setFulfillment('pickup')">
+            <strong>Pick-up</strong><span>We text you the pick-up location</span>
+          </button>
+        </div>
+
+        @if (form.controls.fulfillment.value === 'delivery') {
+          <div class="field" [class.invalid]="invalid('street')">
+            <label for="a-street">House no. and street</label>
+            <input id="a-street" formControlName="street" autocomplete="address-line1" placeholder="123 Mabini St." />
+            @if (invalid('street')) { <span class="err">Enter your house number and street.</span> }
+          </div>
+          <div class="row2">
+            <div class="field" [class.invalid]="invalid('barangay')">
+              <label for="a-brgy">Barangay</label>
+              <input id="a-brgy" formControlName="barangay" placeholder="Brgy. San Isidro" />
+              @if (invalid('barangay')) { <span class="err">Enter your barangay.</span> }
+            </div>
+            <div class="field" [class.invalid]="invalid('city')">
+              <label for="a-city">City / municipality</label>
+              <input id="a-city" formControlName="city" autocomplete="address-level2" placeholder="Batangas City" />
+              @if (invalid('city')) { <span class="err">Enter your city or municipality.</span> }
+            </div>
+          </div>
+          <div class="row2">
+            <div class="field" [class.invalid]="invalid('province')">
+              <label for="a-prov">Province</label>
+              <input id="a-prov" formControlName="province" autocomplete="address-level1" placeholder="Batangas" />
+              @if (invalid('province')) { <span class="err">Enter your province.</span> }
+            </div>
+            <div class="field">
+              <label for="a-landmark">Landmark (optional)</label>
+              <input id="a-landmark" formControlName="landmark" placeholder="Near the chapel" />
+            </div>
+          </div>
+        }
+      </fieldset>
+
+      <fieldset>
+        <legend>Schedule & payment</legend>
+        <div class="row2">
+          <div class="field" [class.invalid]="invalid('preferredDate')">
+            <label for="s-date">Preferred date</label>
+            <input id="s-date" type="date" formControlName="preferredDate" [min]="minDate" />
+          </div>
+          <div class="field">
+            <label for="s-time">Preferred time</label>
+            <select id="s-time" formControlName="preferredTime">
+              <option value="morning">{{ timeLabels.morning }}</option>
+              <option value="afternoon">{{ timeLabels.afternoon }}</option>
+              <option value="anytime">{{ timeLabels.anytime }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="s-pay">Payment</label>
+          <select id="s-pay" formControlName="paymentMethod">
+            <option value="cod">{{ payLabels.cod }}</option>
+            <option value="gcash">{{ payLabels.gcash }}</option>
+            <option value="bank">{{ payLabels.bank }}</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="s-notes">Notes (optional)</label>
+          <textarea id="s-notes" formControlName="notes" placeholder="Gate color, bulk or reseller order, anything we should know"></textarea>
+        </div>
+        <div class="hp" aria-hidden="true">
+          <label for="s-web">Leave this empty</label>
+          <input id="s-web" formControlName="website" tabindex="-1" autocomplete="off" />
+        </div>
+      </fieldset>
+
+      @if (error()) { <p class="form-error" role="alert">{{ error() }}</p> }
+      @if (tried() && form.invalid) { <p class="form-error" role="alert">Some details are missing. Check the fields marked in red.</p> }
+
+      <div class="actions">
+        <a class="btn btn-line" routerLink="/order">← Back to products</a>
+        <button class="btn btn-sun" type="submit" [disabled]="submitting()">{{ submitting() ? 'Sending order…' : 'Place order' }}</button>
+      </div>
+    </form>
+
+    <aside class="summary panel" aria-label="Order summary">
+      <header><h2>Summary</h2><a routerLink="/order">Edit</a></header>
+      <ul class="lines">
+        @for (l of cart.lines(); track l.productId) {
+          <li>
+            <span class="thumb tint" [style.--tint]="l.color"><img [src]="l.image" alt="" /></span>
+            <span class="info"><strong>{{ l.quantity }} × {{ l.name }}</strong><small>{{ l.scent }} · ₱{{ l.unitPrice | number }}/{{ l.unit }}</small></span>
+            <span class="num total">₱{{ l.lineTotal | number }}</span>
+          </li>
+        }
+      </ul>
+      <dl class="totals">
+        <div><dt>Subtotal</dt><dd class="num">₱{{ cart.subtotal() | number }}</dd></div>
+        @if (form.controls.fulfillment.value === 'delivery') {
+          <div class="muted"><dt>Delivery fee</dt><dd>We confirm by text</dd></div>
+        }
+      </dl>
+      <p class="fine">No payment is taken on this site. We confirm your order by text first.</p>
+    </aside>
+  }
+</div>

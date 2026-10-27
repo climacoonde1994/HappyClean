@@ -1,0 +1,13 @@
+{
+  "$schema": "./reviews.schema.json",
+  "reviews": [
+    {
+      "product": "lemon",
+      "stars": 5,
+      "name": "Reggie",
+      "city": "",
+      "date": "",
+      "text": "Great value for the price. It cuts through grease and removes dirt easily."
+    }
+  ]
+}
